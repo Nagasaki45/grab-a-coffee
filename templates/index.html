@@ -5,7 +5,7 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
   />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <div class="main">
@@ -13,7 +13,7 @@
       <image
         class="logo"
         alt="Mintel logo"
-        src="./assets/Mintel_Store_Logo_2022.png"
+        src="/static/assets/Mintel_Store_Logo_2022.png"
       ></image>
       GrabACoffee
     </h1>
@@ -83,7 +83,7 @@
     const sendNotification = (match) => {
       const notification = new Notification(`GrabACoffee with ${match}`, {
         body: `Go grab a cofee ${match} at Mintel House - Ground Floor`,
-        icon: "/assets/GrabACoffee_icon.png",
+        icon: "/static/assets/GrabACoffee_icon.png",
       });
     };
 
@@ -92,7 +92,7 @@
       document.getElementById("match-name").innerHTML = match;
     };
 
-    const TIMER_DURATION = 3; // seconds
+    const TIMER_DURATION = 10; // seconds
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get("name");
     const match = urlParams.get("match");
@@ -132,6 +132,16 @@
       const progressBarElement = document.getElementsByTagName("progress")[0];
       progressBarElement.setAttribute("value", progress);
       progressBarElement.innerHTML = progress + "%";
+
+      if (name && !match) {
+        fetch(`/poll/${name}`)
+          .then((x) => x.json())
+          .then((x) => {
+            if (x.match) {
+              window.location = `/?name=${name}&match=${x.match}`;
+            }
+          });
+      }
     }, 1000);
   </script>
 </body>
