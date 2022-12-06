@@ -28,6 +28,15 @@
             <input class="input" type="text" name="name" placeholder="Name" />
           </div>
         </div>
+        <div class="field">
+          <div class="control is-expanded">
+            <div class="select is-fullwidth">
+              <select>
+                <option>Mintel House - Ground Floor</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         <div class="control">
           <button class="button is-black" type="submit">
@@ -36,14 +45,23 @@
         </div>
       </form>
     </div>
-    <div id="clock"></div>
+    <div id="clock">
+      <p class="description">TODO</p>
+      <progress class="progress is-warning" value="0" max="100">75%</progress>
+      <div id="timer"></div>
+    </div>
   </div>
 
   <script>
+    const formatTime = (seconds) => {
+      return `${Math.floor(seconds / 60)}:${seconds % 60}`;
+    };
+
+    const TIMER_DURATION = 60; // seconds
     const name = new URLSearchParams(window.location.search).get("name");
     const formElement = document.getElementById("form");
     const clockElement = document.getElementById("clock");
-    var seconds = 10 * 60;
+    var seconds = TIMER_DURATION;
 
     if (name) {
       formElement.style.display = "none";
@@ -57,7 +75,13 @@
       if (seconds > 0) {
         seconds -= 1;
       }
-      clockElement.innerHTML = seconds;
+
+      document.getElementById("timer").innerHTML = formatTime(seconds);
+
+      const progress = (1 - seconds / TIMER_DURATION) * 100;
+      const progressBarElement = document.getElementsByTagName("progress")[0];
+      progressBarElement.setAttribute("value", progress);
+      progressBarElement.innerHTML = progress + "%";
     }, 1000);
   </script>
 </body>
