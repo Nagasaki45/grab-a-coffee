@@ -6,7 +6,7 @@ from flask import request
 
 app = Flask(__name__)
 
-TIMER_DURATION = 30
+TIMER_DURATION = 60 * 10
 
 # Dict from name to joining time in seconds since epoch
 available_people = {}
