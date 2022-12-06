@@ -1,0 +1,28 @@
+body {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.main {
+  margin: auto;
+  background-color: #F7F7F7;
+  border-radius: 12px;
+  padding: 43px;
+  max-width: 480px;
+}
+
+h1 {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 132px;
+  height: 49px;
+  margin-right: 0.5em;
+}
+
+.description {
+  margin-bottom: 1em;
+}
