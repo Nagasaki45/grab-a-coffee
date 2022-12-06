@@ -60,6 +60,14 @@
         Meet <span id="match-name"></span> at Mintel House - Ground Floor
       </p>
     </div>
+
+    <button
+      id="notifications-button"
+      class="button is-small"
+      onClick="enableNotifications()"
+    >
+      Enable notifications
+    </button>
   </div>
 
   <script>
@@ -67,9 +75,15 @@
       return `${Math.floor(seconds / 60)}:${seconds % 60}`;
     };
 
+    const enableNotifications = () => {
+      Notification.requestPermission();
+      document.getElementById("notifications-button").style.display = "none";
+    };
+
     const sendNotification = (match) => {
       const notification = new Notification(`GrabACoffee with ${match}`, {
         body: `Go grab a cofee ${match} at Mintel House - Ground Floor`,
+        icon: "/assets/GrabACoffee_icon.png",
       });
     };
 
@@ -82,7 +96,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get("name");
     const match = urlParams.get("match");
-    console.log(match);
     const formElement = document.getElementById("form");
     const clockElement = document.getElementById("clock");
     const matchElement = document.getElementById("match");
@@ -104,6 +117,10 @@
       matchElement.style.display = "none";
     }
 
+    if (Notification.permission !== "default") {
+      document.getElementById("notifications-button").style.display = "none";
+    }
+
     setInterval(() => {
       if (seconds > 0) {
         seconds -= 1;
@@ -116,7 +133,5 @@
       progressBarElement.setAttribute("value", progress);
       progressBarElement.innerHTML = progress + "%";
     }, 1000);
-
-    Notification.requestPermission();
   </script>
 </body>
