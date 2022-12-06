@@ -45,10 +45,20 @@
         </div>
       </form>
     </div>
+
     <div id="clock">
-      <p class="description">TODO</p>
+      <p class="description">
+        Please wait whilst we match you with a coffee friend
+      </p>
       <progress class="progress is-warning" value="0" max="100">75%</progress>
-      <div id="timer"></div>
+      <div id="timer">0:00</div>
+    </div>
+
+    <div id="match">
+      <h3 class="subtitle has-text-centered">Match found!</h3>
+      <p class="description">
+        Meet <span id="match-name"></span> at Mintel House - Ground Floor
+      </p>
     </div>
   </div>
 
@@ -57,18 +67,41 @@
       return `${Math.floor(seconds / 60)}:${seconds % 60}`;
     };
 
-    const TIMER_DURATION = 60; // seconds
-    const name = new URLSearchParams(window.location.search).get("name");
+    const sendNotification = (match) => {
+      const notification = new Notification(`GrabACoffee with ${match}`, {
+        body: `Go grab a cofee ${match} at Mintel House - Ground Floor`,
+      });
+    };
+
+    const matchFound = (match) => {
+      sendNotification(match);
+      document.getElementById("match-name").innerHTML = match;
+    };
+
+    const TIMER_DURATION = 3; // seconds
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get("name");
+    const match = urlParams.get("match");
+    console.log(match);
     const formElement = document.getElementById("form");
     const clockElement = document.getElementById("clock");
+    const matchElement = document.getElementById("match");
     var seconds = TIMER_DURATION;
 
     if (name) {
       formElement.style.display = "none";
-      clockElement.style.display = "block";
+      if (match) {
+        matchFound(match);
+        clockElement.style.display = "none";
+        matchElement.style.display = "block";
+      } else {
+        clockElement.style.display = "block";
+        matchElement.style.display = "none";
+      }
     } else {
       formElement.style.display = "block";
       clockElement.style.display = "none";
+      matchElement.style.display = "none";
     }
 
     setInterval(() => {
@@ -83,5 +116,7 @@
       progressBarElement.setAttribute("value", progress);
       progressBarElement.innerHTML = progress + "%";
     }, 1000);
+
+    Notification.requestPermission();
   </script>
 </body>
