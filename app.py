@@ -23,7 +23,8 @@ def cleanup():
 def index():
     cleanup()
     name = request.args.get('name')
-    if name and not name in available_people:
+    match = request.args.get('match')
+    if name and not match and not name in available_people:
         available_people[name] = time.time()
     return render_template("index.html")
 
@@ -31,9 +32,8 @@ def index():
 @app.route("/poll/<name>")
 def poll(name):
     cleanup()
-    if len(available_people) > 1:
-        for match in available_people:
-            if match != name:
-                app.logger.info("MATCH!!!")
-                return {"match": match}
+    for match in available_people:
+        if match != name:
+            available_people[match] = 0
+            return {"match": match}
     return {}
