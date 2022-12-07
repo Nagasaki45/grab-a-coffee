@@ -109,7 +109,7 @@ const ClockPage = ({ name, setMatch }) => {
 const MatchPage = ({ match }) => {
   React.useEffect(() => {
     new Notification(`GrabACoffee with ${match}`, {
-      body: `Go grab a cofee ${match} at Mintel House - Ground Floor`,
+      body: `Go grab a cofee with ${match} at Mintel House - Ground Floor`,
       icon: "/static/assets/GrabACoffee_icon.png",
     });
   }, [match]);
