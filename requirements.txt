@@ -1,4 +1,4 @@
-eventlet==0.33.2
+eventlet
 Flask
 Flask-SocketIO
-gunicorn
+https://github.com/benoitc/gunicorn/archive/refs/heads/master.zip#egg=gunicorn==20.1.0
