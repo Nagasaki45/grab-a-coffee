@@ -11,5 +11,5 @@ pip install -r requirements.txt
 Run the server with
 
 ```bash
-FLASK_ENV=development flask run -p 8000
+FLASK_ENV=development python app.py
 ```

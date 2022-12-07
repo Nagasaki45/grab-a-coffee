@@ -6,8 +6,22 @@
     href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
   />
   <link rel="stylesheet" href="/static/style.css" />
+  <script
+    src="https://unpkg.com/react@18/umd/react.development.js"
+    crossorigin
+  ></script>
+  <script
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    crossorigin
+  ></script>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.js" crossorigin></script>
+  <script
+    src="https://unpkg.com/@babel/standalone/babel.min.js"
+    crossorigin
+  ></script>
+  <script src="/static/app.js" type="text/babel"></script>
   <title>Mintel GrabACoffee</title>
-  <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
 </head>
 <body>
   <div class="main">
@@ -19,131 +33,6 @@
       ></image>
       GrabACoffee
     </h1>
-    <div id="form">
-      <p class="description">
-        Enter your name below to find someone else looking to grab a coffee at
-        Mintel London within the next 10 minutes!
-      </p>
-      <form class="form">
-        <div class="field">
-          <div class="control">
-            <input class="input" type="text" name="name" placeholder="Name" />
-          </div>
-        </div>
-        <div class="field">
-          <div class="control is-expanded">
-            <div class="select is-fullwidth">
-              <select>
-                <option>Mintel House - Ground Floor</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="control">
-          <button class="button is-black" type="submit">
-            Grab a coffee now!
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div id="clock">
-      <p class="description">
-        Please wait whilst we match you with a coffee friend
-      </p>
-      <progress class="progress is-warning" value="0" max="100">75%</progress>
-      <div id="timer">0:00</div>
-    </div>
-
-    <div id="match">
-      <h3 class="subtitle has-text-centered">Match found!</h3>
-      <p class="description">
-        Meet <span id="match-name"></span> at Mintel House - Ground Floor
-      </p>
-    </div>
-
-    <button
-      id="notifications-button"
-      class="button is-small"
-      onClick="enableNotifications()"
-    >
-      Enable notifications
-    </button>
+    <div id="app"></div>
   </div>
-
-  <script>
-    const formatTime = (seconds) => {
-      return `${Math.floor(seconds / 60)}:${seconds % 60}`;
-    };
-
-    const enableNotifications = () => {
-      Notification.requestPermission();
-      document.getElementById("notifications-button").style.display = "none";
-    };
-
-    const sendNotification = (match) => {
-      const notification = new Notification(`GrabACoffee with ${match}`, {
-        body: `Go grab a cofee ${match} at Mintel House - Ground Floor`,
-        icon: "/static/assets/GrabACoffee_icon.png",
-      });
-    };
-
-    const matchFound = (match) => {
-      sendNotification(match);
-      document.getElementById("match-name").innerHTML = match;
-    };
-
-    const TIMER_DURATION = 60 * 10; // seconds
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get("name");
-    const match = urlParams.get("match");
-    const formElement = document.getElementById("form");
-    const clockElement = document.getElementById("clock");
-    const matchElement = document.getElementById("match");
-    var seconds = TIMER_DURATION;
-
-    if (name) {
-      formElement.style.display = "none";
-      if (match) {
-        matchFound(match);
-        clockElement.style.display = "none";
-        matchElement.style.display = "block";
-      } else {
-        clockElement.style.display = "block";
-        matchElement.style.display = "none";
-      }
-    } else {
-      formElement.style.display = "block";
-      clockElement.style.display = "none";
-      matchElement.style.display = "none";
-    }
-
-    if (Notification.permission !== "default") {
-      document.getElementById("notifications-button").style.display = "none";
-    }
-
-    setInterval(() => {
-      if (seconds > 0) {
-        seconds -= 1;
-      }
-
-      document.getElementById("timer").innerHTML = formatTime(seconds);
-
-      const progress = (1 - seconds / TIMER_DURATION) * 100;
-      const progressBarElement = document.getElementsByTagName("progress")[0];
-      progressBarElement.setAttribute("value", progress);
-      progressBarElement.innerHTML = progress + "%";
-
-      if (name && !match) {
-        fetch(`/poll/${name}`)
-          .then((x) => x.json())
-          .then((x) => {
-            if (x.match) {
-              window.location = `/?name=${name}&match=${x.match}`;
-            }
-          });
-      }
-    }, 1000);
-  </script>
 </body>
