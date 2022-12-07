@@ -1,4 +1,4 @@
-const TIMER_DURATION = 30; // seconds
+const TIMER_DURATION = 10 * 60; // seconds
 
 const FormPage = ({ setName }) => {
   const nameInputRef = React.useRef();
