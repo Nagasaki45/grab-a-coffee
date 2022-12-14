@@ -1,9 +1,21 @@
 const TIMER_DURATION = 10 * 60; // seconds
 
-const FormPage = ({ setName }) => {
+const FormPage = ({ setFormData }) => {
+  const [locations, setLocations] = React.useState([]);
+
   const nameInputRef = React.useRef();
+  const locationInputRef = React.useRef();
+  React.useEffect(() => {
+    fetch("/locations")
+      .then((resp) => resp.json())
+      .then((data) => setLocations(data.locations));
+  }, [setLocations]);
+
   const handleSubmit = React.useCallback((event) => {
-    setName(nameInputRef.current.value);
+    setFormData({
+      name: nameInputRef.current.value,
+      location: locationInputRef.current.value,
+    });
     event.preventDefault();
   }, []);
 
@@ -20,7 +32,6 @@ const FormPage = ({ setName }) => {
               ref={nameInputRef}
               className="input"
               type="text"
-              name="name"
               placeholder="Name"
             />
           </div>
@@ -28,8 +39,10 @@ const FormPage = ({ setName }) => {
         <div className="field">
           <div className="control is-expanded">
             <div className="select is-fullwidth">
-              <select>
-                <option>Mintel House - Ground Floor</option>
+              <select ref={locationInputRef}>
+                {locations.map((location) => {
+                  return <option key={location}>{location}</option>;
+                })}
               </select>
             </div>
           </div>
@@ -45,7 +58,7 @@ const FormPage = ({ setName }) => {
   );
 };
 
-const useMatchFinder = (name, setMatch) => {
+const useMatchFinder = (name, location, setMatch) => {
   const socket = React.useMemo(() => io(), []);
   React.useEffect(() => {
     socket.on("match", (match) => {
@@ -53,7 +66,7 @@ const useMatchFinder = (name, setMatch) => {
     });
     socket.on("connect", () => {
       console.log("Connected!");
-      socket.emit("join", name);
+      socket.emit("join", name, location);
     });
 
     socket.on("disconnect", () => {
@@ -69,8 +82,8 @@ const useMatchFinder = (name, setMatch) => {
   }, []);
 };
 
-const ClockPage = ({ name, setMatch }) => {
-  useMatchFinder(name, setMatch);
+const ClockPage = ({ name, location, setMatch }) => {
+  useMatchFinder(name, location, setMatch);
   const [seconds, setSeconds] = React.useState(TIMER_DURATION);
 
   const tick = React.useCallback(() => {
@@ -106,10 +119,10 @@ const ClockPage = ({ name, setMatch }) => {
   );
 };
 
-const MatchPage = ({ match }) => {
+const MatchPage = ({ location, match }) => {
   React.useEffect(() => {
     new Notification(`GrabACoffee with ${match}`, {
-      body: `Go grab a cofee with ${match} at Mintel House - Ground Floor`,
+      body: `Go grab a cofee with ${match} at ${location}`,
       icon: "/static/assets/GrabACoffee_icon.png",
     });
   }, [match]);
@@ -117,7 +130,7 @@ const MatchPage = ({ match }) => {
     <div className="has-text-centered">
       <h3 className="subtitle is-6">Match found!</h3>
       <p className="description has-text-weight-bold">
-        Meet {match} at Mintel House - Ground Floor
+        Meet {match} at {location}
       </p>
     </div>
   );
@@ -153,16 +166,22 @@ const NotificationButton = () => {
 };
 
 const App = () => {
-  const [name, setName] = React.useState();
+  const [formData, setFormData] = React.useState();
   const [match, setMatch] = React.useState();
   return (
     <>
-      {!name && <FormPage setName={setName} />}
-      {name && match === undefined && (
-        <ClockPage name={name} setMatch={setMatch} />
+      {!formData && <FormPage setFormData={setFormData} />}
+      {formData && match === undefined && (
+        <ClockPage
+          name={formData.name}
+          location={formData.location}
+          setMatch={setMatch}
+        />
       )}
-      {name && match === false && <NoMatchPage setMatch={setMatch} />}
-      {name && match && <MatchPage match={match} />}
+      {formData && match === false && <NoMatchPage setMatch={setMatch} />}
+      {formData && match && (
+        <MatchPage location={formData.location} match={match} />
+      )}
       <NotificationButton />
     </>
   );
