@@ -32,7 +32,7 @@ const FormPage = ({ setFormData }) => {
               ref={nameInputRef}
               className="input"
               type="text"
-              placeholder="Name"
+              placeholder="Full Name"
             />
           </div>
         </div>
