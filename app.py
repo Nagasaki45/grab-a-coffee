@@ -9,7 +9,10 @@ socketio = SocketIO(app)
 # {Location: {Session ID: name}}
 data = {
     "Mintel House - Ground Floor": {},
-    "Carter Lane": {}
+    "Carter Lane": {},
+    "Belfast - Members Lounge - Ground Floor": {},
+    "Belfast - Kitchen - 4th Floor": {},
+    "Belfast - Members Terrace - Top Floor": {}
 }
 
 
