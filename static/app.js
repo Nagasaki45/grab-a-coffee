@@ -22,8 +22,8 @@ const FormPage = ({ setFormData }) => {
   return (
     <>
       <p className="description">
-        Enter your name below to find someone else looking to grab a coffee at
-        Mintel London within the next 10 minutes!
+        Enter your full name below to find someone else looking to grab a coffee at
+        a Mintel Office within the next 10 minutes!
       </p>
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
