@@ -16,8 +16,4 @@ FLASK_ENV=development python app.py
 
 ## Deployment
 
-The project is available on [grab-a-coffee.tomgurion.me](https://grab-a-coffee.tomgurion.me). It is deployed on digital ocean app platform. DNS through cloudflare. For the record, here's the `run command` defined in digitalocean:
-
-```bash
-gunicorn --worker-class eventlet --worker-tmp-dir /dev/shm app:app
-```
+The project is available on [grab-a-coffee.tomgurion.me](https://grab-a-coffee.tomgurion.me). It is deployed on Tom's [dokku droplet on digital ocean](https://docs.digitalocean.com/products/marketplace/catalog/dokku/). DNS through cloudflare.
